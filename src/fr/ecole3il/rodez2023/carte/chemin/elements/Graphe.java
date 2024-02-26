@@ -27,29 +27,39 @@ public class Graphe<E> {
 	    }
 	    
 	    public void ajouterArete(Noeud<E> depart, Noeud<E> arrivee, double cout) {
-	        // Verif si les noeuds depart et arrivee existe, sinon, ajouter au graphe via ajouterNoeud
-	        if (!relations.containsKey(depart)) {
+	        //Verif noeud départ ou arrivee existe
+	    	if (!matriceAdj.containsKey(depart)) {
 	            ajouterNoeud(depart);
 	        }
-	        if (!relations.containsKey(arrivee)) {
+	        if (!matriceAdj.containsKey(arrivee)) {
 	            ajouterNoeud(arrivee);
 	        }
-	        
+	        //Iniatilise 
+	        matriceAdj.get(depart).put(arrivee, cout);
 	    }
 
-
+	    /**@methode return la valeur */
 	    public double getCoutArete(Noeud<E> depart, Noeud<E> arrivee) {
-	        if (matriceAdj.containsKey(depart) && matriceAdj.get(depart).containsKey(arrivee)) {
-	            return matriceAdj.get(depart).get(arrivee);
-	        } else {
-	            return Double.POSITIVE_INFINITY;
+	        // Vérif si  nœud de départ existe
+	        if (matriceAdj.containsKey(depart)) {
+	            // recup map des arretes du noeud départ
+	            Map<Noeud<E>, Double> aretesAdjacentes = matriceAdj.get(depart);
+	            
+	            // Verrif si arrete existe
+	            if (aretesAdjacentes.containsKey(arrivee)) {
+		                // renvoie le cout de l'arrete
+	                return aretesAdjacentes.get(arrivee);
+	            }
 	        }
+	        ///Si val nul, return 0
+	        return 0;
 	    }
 
+	    /**@getter --> Renvoie la liste des noeuds du graphe*/
 	    public List<Noeud<E>> getNoeuds() {
 	        return new ArrayList<>(listeNoeuds);
 	    }
-
+	    /**@getter --> renvoie la liste de voisins d'un noeud*/
 	    public List<Noeud<E>> getVoisins(Noeud<E> noeud) {
 	        if (matriceAdj.containsKey(noeud)) {
 	            return new ArrayList<>(matriceAdj.get(noeud).keySet());
