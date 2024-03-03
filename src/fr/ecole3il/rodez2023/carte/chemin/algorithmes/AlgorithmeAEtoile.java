@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 import fr.ecole3il.rodez2023.carte.chemin.elements.Graphe;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Noeud;
@@ -46,11 +47,26 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
 
        return construireChemin(arrivee, predecesseurs);
    }
-	private Map<Noeud<E>, Double> initialiserCoutsEstimes(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
-	
-	}
+	//Initialise les couts
+	/**
+	* @param graphe   le graphe dans lequel la recherche est effectuée.
+    * @param depart   le nœud de départ.
+    * @param arrivee  le nœud d'arrivée.
+    * @return une map contenant les coûts estimés pour chaque nœud.
+    */
+   private Map<Noeud<E>, Double> initialiserCoutsEstimes(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
+       Map<Noeud<E>, Double> coutsEstimes = new HashMap<>();
+       for (Noeud<E> noeud : graphe.getNoeuds()) {
+           // Utilisation de la distance à vol d'oiseau comme heuristique pour les coûts estimés
+           double distance = calculerDistanceCuiCui(noeud, arrivee);
+           coutsEstimes.put(noeud, distance);
+       }
+       return coutsEstimes;
+   }
+   //Methode calcul distance vol oiseau, random pour l'instant car je ne sais pas comment faire
 	private double calculerDistanceCuiCui(Noeud<E> noeud1, Noeud<E> noeud2) {
-		
+		Random ran= new Random();
+		return ran.nextDouble();
 	}
 	/**Initialisation Priorité
 	*@param coutsEstimes une map contenant les coûts estimés pour chaque nœud
