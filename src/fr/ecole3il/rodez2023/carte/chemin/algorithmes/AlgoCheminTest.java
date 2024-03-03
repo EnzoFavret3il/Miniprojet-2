@@ -19,6 +19,19 @@ class AlgoCheminTest {
         graphe.ajouterNoeud(depart);
         graphe.ajouterNoeud(arrivee);
         graphe.ajouterArete(depart, arrivee, 1.0);
+        
+     // algo de test
+        AlgorithmeChemin<String> algorithmeChemin = new AlgorithmeChemin<String>() {
+        	
+        	// return que deux valeurs pour simplifier les tests
+            @Override
+            public List<Noeud<String>> trouverChemin(Graphe<String> graphe, Noeud<String> depart, Noeud<String> arrivee) {
+                return List.of(depart, arrivee);
+            }
+        };
+        
+        
+        
 	}
 
 }
