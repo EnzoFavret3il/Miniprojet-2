@@ -30,8 +30,12 @@ class AlgoCheminTest {
             }
         };
         
+        List<Noeud<String>> cheminTrouve = algorithmeChemin.trouverChemin(graphe, depart, arrivee);
         
-        
+        //Verif des resultats => retrouvons nous le chemin après le bar ?
+        assertEquals(2, cheminTrouve.size());
+        assertEquals(depart, cheminTrouve.get(0));
+        assertEquals(arrivee, cheminTrouve.get(1));
 	}
 
 }
