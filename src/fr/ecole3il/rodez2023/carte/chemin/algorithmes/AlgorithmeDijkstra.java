@@ -3,6 +3,7 @@ package fr.ecole3il.rodez2023.carte.chemin.algorithmes;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Graphe;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Noeud;
 import fr.ecole3il.rodez2023.carte.elements.Carte;
+import fr.ecole3il.rodez2023.carte.elements.Case;
 import fr.ecole3il.rodez2023.carte.elements.Chemin;
 
 import java.util.*;
@@ -74,7 +75,7 @@ public class AlgorithmeDijkstra<E> implements AlgorithmeChemin<E> {
     }
 
     //Methode de contruction du chemin en fonction du chemin le plus court
-    /**@param arrivee        le nœud d'arrivee
+    /**@param arrivee le nœud d'arrivee
      *@param predecesseurs  une map contenant les prédécesseurs de chaque nœud
      *@return une liste de nœuds représentant le chemin le plus court
      */
@@ -89,9 +90,11 @@ public class AlgorithmeDijkstra<E> implements AlgorithmeChemin<E> {
         Collections.reverse(chemin);
         return chemin;
     }
-	@Override
-	public Chemin trouverChemin(Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Chemin trouverChemin(Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
+        return null;
+    }
+
+
+
 }

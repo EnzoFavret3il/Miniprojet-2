@@ -25,7 +25,9 @@ public class Carte {
     public Tuile getTuile(int x, int y) {
         return tuiles[x][y];
     }
-
+    public Case getCase(int x, int y) {
+        return new Case(getTuile(x, y), x, y);
+    }
     /**
      * Récupère la largeur de la carte (nombre de colonnes).
      * @return La largeur de la carte.
