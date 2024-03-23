@@ -47,9 +47,15 @@ public class AdaptateurAlgorithme {
     static void ajouterAretesVoisines(Graphe<Case> graphe, Case currentCase, int x, int y, int largeur, int hauteur) {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
+                // Ignorer le cas où i et j sont tous les deux égaux à zéro (pas de déplacement)
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+
                 int newX = x + i;
                 int newY = y + j;
 
+                // Vérifier si les coordonnées sont valides
                 if (newX >= 0 && newX < largeur && newY >= 0 && newY < hauteur) {
                     Case voisin = new Case(currentCase.getTuile(), newX, newY);
                     graphe.ajouterArete(new Noeud<>(currentCase), new Noeud<>(voisin), calculerCout(currentCase, voisin));
@@ -57,6 +63,7 @@ public class AdaptateurAlgorithme {
             }
         }
     }
+
 
     static double calculerCout(Case from, Case to) {
         if (from == null || to == null)
@@ -66,20 +73,34 @@ public class AdaptateurAlgorithme {
     }
 
     static Chemin afficherChemin(List<Noeud<Case>> chemin) {
-        if (chemin.isEmpty()) {
-            System.out.println("No path found!");
+        try {
+            if (chemin.isEmpty()) {
+                System.out.println("No path found!");
+                return new Chemin(new ArrayList<>());
+            }
+
+            System.out.print("Path: ");
+            List<Case> cheminCases = new ArrayList<>();
+            for (int i = 0; i < chemin.size(); i++) {
+                Case caseNode = chemin.get(i).getValeur();
+                cheminCases.add(caseNode);
+                if (i != 0) {
+                    System.out.print(" -> ");
+                }
+                System.out.print("Case [x=" + caseNode.getX() + ", y=" + caseNode.getY() + "]");
+            }
+            System.out.println();
+
+            return new Chemin(cheminCases);
+        } catch (Exception e) {
+            System.out.println("An error occurred while displaying the path: " + e.getMessage());
+            e.printStackTrace();
             return new Chemin(new ArrayList<>());
         }
-
-        System.out.print("Path: ");
-        List<Case> cheminCases = new ArrayList<>();
-        for (Noeud<Case> noeud : chemin) {
-            Case caseNode = noeud.getValeur();
-            cheminCases.add(caseNode);
-            System.out.print(" -> " + caseNode.toString());
-        }
-        System.out.println();
-
-        return new Chemin(cheminCases);
     }
+
+
+
+
+
 }

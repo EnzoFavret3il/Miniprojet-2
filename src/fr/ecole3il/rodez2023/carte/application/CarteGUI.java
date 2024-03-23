@@ -107,13 +107,26 @@ public class CarteGUI extends JFrame {
                 }
             }
         }
+
+        // Dessiner le chemin
         if (caseDepart != null && caseArrivee != null) {
-            Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme, carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(), caseArrivee.getY());			g.setColor(Color.RED);
-            for (Case c : chemin.getCases()) {
-                g.fillRect(c.getX() * 32, c.getY() * 32, 32, 32);
+            Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme, carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(), caseArrivee.getY());
+            List<Case> casesChemin = chemin.getCases();
+
+            if (!casesChemin.isEmpty()) {
+                g.setColor(Color.GREEN); // Couleur du chemin
+                for (int i = 0; i < casesChemin.size() - 1; i++) {
+                    Case currentCase = casesChemin.get(i);
+                    Case nextCase = casesChemin.get(i + 1);
+                    g.drawLine(currentCase.getX() * 32 + 16, currentCase.getY() * 32 + 16,
+                            nextCase.getX() * 32 + 16, nextCase.getY() * 32 + 16);
+                }
             }
         }
     }
+
+
+
 
     private void trouverChemin() {
         if (caseDepart != null && caseArrivee != null) {
@@ -124,6 +137,7 @@ public class CarteGUI extends JFrame {
             }
         }
     }
+
 
     private BufferedImage getTuileImage(Tuile tuile) {
         // Bon, j'ai pas eu le temps de faire les images
