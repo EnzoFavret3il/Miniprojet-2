@@ -12,10 +12,8 @@ public interface AlgorithmeChemin<E> {
 	 * -	Graphe<E> graphe => graphe où la recherche est effectué
 	 * -	Noeud<E> départ => noeud de départ
 	 * -	Noeud<E> arrivee => noeud d'arrive
-	 * 
+	 *
 	 * @return => renvoie un liste de noeud permettant de visualiser le chemin*/
     List<Noeud<E>> trouverChemin(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee);
-    
-    
-    Chemin trouverChemin(Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee);
+
 }

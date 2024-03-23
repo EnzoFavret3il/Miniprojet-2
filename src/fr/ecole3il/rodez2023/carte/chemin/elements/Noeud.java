@@ -13,7 +13,7 @@ public class Noeud<E> {
 	public Noeud(E valeur) {
 		
 		this.valeur = valeur;
-		this.voisins = voisins;
+		this.voisins = new ArrayList<>();
 	}
 	/**@getter E --> renvoie la valeur du getter E*/
 	public E getValeur() {

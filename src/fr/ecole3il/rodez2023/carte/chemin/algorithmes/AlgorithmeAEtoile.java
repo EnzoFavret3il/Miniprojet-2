@@ -49,7 +49,9 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
 
        return construireChemin(arrivee, predecesseurs);
    }
-	//Initialise les couts
+
+
+    //Initialise les couts
 	/**
 	* @param graphe   le graphe dans lequel la recherche est effectuée.
     * @param depart   le nœud de départ.
@@ -94,9 +96,5 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
        Collections.reverse(chemin);
        return chemin;
    }
-@Override
-public Chemin trouverChemin(Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
-	// TODO Auto-generated method stub
-	return null;
-}
+
 }

@@ -2,7 +2,6 @@ package fr.ecole3il.rodez2023.carte.chemin.algorithmes;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeChemin;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Graphe;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Noeud;
 import fr.ecole3il.rodez2023.carte.elements.Carte;
@@ -32,11 +31,6 @@ class AlgoCheminTest {
                 return List.of(depart, arrivee);
             }
 
-			@Override
-			public Chemin trouverChemin(Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
-				// TODO Auto-generated method stub
-				return null;
-			}
         };
         
         List<Noeud<String>> cheminTrouve = algorithmeChemin.trouverChemin(graphe, depart, arrivee);
