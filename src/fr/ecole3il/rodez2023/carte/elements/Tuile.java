@@ -27,4 +27,9 @@ public enum Tuile {
     public int getPenalite() {
         return penalite;
     }
+    public boolean isWalkable() {
+        // Implement this method based on your game's rules
+        // For example, you might decide that all tiles are walkable except for MONTAGNES
+        return this != MONTAGNES;
+    }
 }
