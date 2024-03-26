@@ -23,32 +23,41 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
 	 *@param arrivee  le nœud d'arrivée
 	 *@return liste de noeud représentant le chemin le plus court eentre depart/arrivee
 	 */
-   public List<Noeud<E>> trouverChemin(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
-       Map<Noeud<E>, Double> coutsEstimes = initialiserCoutsEstimes(graphe, depart, arrivee);
-       Map<Noeud<E>, Double> coutsActuels = new HashMap<>();
-       Map<Noeud<E>, Noeud<E>> predecesseurs = new HashMap<>();
-       PriorityQueue<Noeud<E>> filePriorite = initialiserFilePriorite(coutsEstimes);
+    public List<Noeud<E>> trouverChemin(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
+        Map<Noeud<E>, Noeud<E>> precedent = new HashMap<>();
+        Map<Noeud<E>, Double> distance = new HashMap<>();
+        PriorityQueue<Noeud<E>> queue = new PriorityQueue<>(Comparator.comparingDouble(distance::get));
 
-       coutsActuels.put(depart, 0.0);
+        for (Noeud<E> noeud : graphe.getNoeuds()) {
+            distance.put(noeud, Double.POSITIVE_INFINITY);
+            precedent.put(noeud, null);
+        }
+        distance.put(depart, 0.0);
+        queue.add(depart);
 
-       while (!filePriorite.isEmpty()) {
-           Noeud<E> noeudActuel = filePriorite.poll();
-           if (noeudActuel.equals(arrivee)) {
-               break;
-           }
-           for (Noeud<E> voisin : graphe.getVoisins(noeudActuel)) {
-               double nouveauCout = coutsActuels.get(noeudActuel) + graphe.getCoutArete(noeudActuel, voisin);
-               if (!coutsActuels.containsKey(voisin) || nouveauCout < coutsActuels.get(voisin)) {
-                   coutsActuels.put(voisin, nouveauCout);
-                   double coutTotalEstime = nouveauCout + coutsEstimes.get(voisin);
-                   filePriorite.add(voisin);
-                   predecesseurs.put(voisin, noeudActuel);
-               }
-           }
-       }
+        while (!queue.isEmpty()) {
+            Noeud<E> noeudActuel = queue.poll();
 
-       return construireChemin(arrivee, predecesseurs);
-   }
+            for (Noeud<E> voisin : graphe.getVoisins(noeudActuel)) {
+                double nouveauDistance = distance.get(noeudActuel) + graphe.getCoutArete(noeudActuel, voisin);
+                if (nouveauDistance < distance.get(voisin)) {
+                    distance.put(voisin, nouveauDistance);
+                    precedent.put(voisin, noeudActuel);
+                    queue.offer(voisin);
+                }
+            }
+        }
+
+        List<Noeud<E>> chemin = new ArrayList<>();
+        for (Noeud<E> noeud : graphe.getNoeuds()) {
+            if (precedent.get(noeud) != null) {
+                chemin.add(noeud);
+            }
+        }
+        Collections.reverse(chemin);
+
+        return chemin;
+    }
 
 
     //Initialise les couts

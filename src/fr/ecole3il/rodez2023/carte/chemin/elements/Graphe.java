@@ -59,6 +59,14 @@ public class Graphe<E> {
 	    public List<Noeud<E>> getNoeuds() {
 	        return new ArrayList<>(listeNoeuds);
 	    }
+	public Noeud<E> getNoeud(E valeur) {
+		for (Noeud<E> noeud : listeNoeuds) {
+			if (noeud.getValeur().equals(valeur)) {
+				return noeud;
+			}
+		}
+		return null;
+	}
 	    /**@getter --> renvoie la liste de voisins d'un noeud*/
 	    public List<Noeud<E>> getVoisins(Noeud<E> noeud) {
 	        if (matriceAdj.containsKey(noeud)) {

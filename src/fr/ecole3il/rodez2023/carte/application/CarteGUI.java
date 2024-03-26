@@ -20,6 +20,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Objects;
 
 public class CarteGUI extends JFrame {
     private Carte carte;
@@ -175,4 +176,5 @@ public class CarteGUI extends JFrame {
             carteGUI.setVisible(true);
         });
     }
+
 }

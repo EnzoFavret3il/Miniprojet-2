@@ -10,23 +10,68 @@ import fr.ecole3il.rodez2023.carte.elements.Tuile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdaptateurAlgorithme {
 
-    public static Chemin trouverChemin(AlgorithmeChemin<Case> algorithme, Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
-        Graphe<Case> graphe = creerGraphe(carte);
+    public static Chemin trouverChemin(AlgorithmeChemin algorithme, Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
+        // Convert the map to a graph
+        Graphe<Case> graphe = convertirCarteEnGraphe(carte);
 
-        Tuile tuileDepart = carte.getTuile(xDepart, yDepart);
-        Case depart = new Case(tuileDepart, xDepart, yDepart);
+        // Create the start and end nodes
+        Noeud<Case> noeudDepart = new Noeud<>(carte.getCase(xDepart, yDepart));
+        Noeud<Case> noeudArrivee = new Noeud<>(carte.getCase(xArrivee, yArrivee));
 
-        Tuile tuileArrivee = carte.getTuile(xArrivee, yArrivee);
-        Case arrivee = new Case(tuileArrivee, xArrivee, yArrivee);
+        // Find the shortest path
+        List<Noeud<Case>> noeudsChemin = algorithme.trouverChemin(graphe, noeudDepart, noeudArrivee);
 
-        List<Noeud<Case>> chemin = algorithme.trouverChemin(graphe, new Noeud<>(depart), new Noeud<>(arrivee));
+        // Convert the nodes back to cases
+        List<Case> casesChemin = noeudsChemin.stream()
+                .map(Noeud::getValeur) // Use getValeur instead of getDonnees
+                .collect(Collectors.toList());
 
-        return afficherChemin(chemin);
+        // Return the path
+        return new Chemin(casesChemin);
     }
 
+    private static Graphe<Case> convertirCarteEnGraphe(Carte carte) {
+        Graphe<Case> graphe = new Graphe<>();
+        int largeur = carte.getLargeur();
+        int hauteur = carte.getHauteur();
+
+        // First, add all nodes to the graph
+        for (int x = 0; x < largeur; x++) {
+            for (int y = 0; y < hauteur; y++) {
+                Noeud<Case> noeud = new Noeud<>(carte.getCase(x, y));
+                graphe.ajouterNoeud(noeud);
+            }
+        }
+
+        // Then, add edges between adjacent nodes
+        for (int x = 0; x < largeur; x++) {
+            for (int y = 0; y < hauteur; y++) {
+                Noeud<Case> noeudCourant = graphe.getNoeud(carte.getCase(x, y));
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        // Skip the current node itself
+                        if (dx == 0 && dy == 0) continue;
+
+                        int nx = x + dx;
+                        int ny = y + dy;
+
+                        // Check if the coordinates are within the map
+                        if (nx >= 0 && nx < largeur && ny >= 0 && ny < hauteur) {
+                            Noeud<Case> noeudVoisin = graphe.getNoeud(carte.getCase(nx, ny));
+                            // Add an edge with a cost of 1.0. You can adjust this cost as needed.
+                            graphe.ajouterArete(noeudCourant, noeudVoisin, 1.0);
+                        }
+                    }
+                }
+            }
+        }
+
+        return graphe;
+    }
     static Graphe<Case> creerGraphe(Carte carte) {
         Graphe<Case> graphe = new Graphe<>();
         int largeur = carte.getLargeur();
@@ -47,7 +92,7 @@ public class AdaptateurAlgorithme {
     static void ajouterAretesVoisines(Graphe<Case> graphe, Case currentCase, int x, int y, int largeur, int hauteur) {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                // Ignorer le cas où i et j sont tous les deux égaux à zéro (pas de déplacement)
+                // Ignore the case where i and j are both equal to zero (no movement)
                 if (i == 0 && j == 0) {
                     continue;
                 }
@@ -55,10 +100,14 @@ public class AdaptateurAlgorithme {
                 int newX = x + i;
                 int newY = y + j;
 
-                // Vérifier si les coordonnées sont valides
+                // Check if the coordinates are valid
                 if (newX >= 0 && newX < largeur && newY >= 0 && newY < hauteur) {
-                    Case voisin = new Case(currentCase.getTuile(), newX, newY);
-                    graphe.ajouterArete(new Noeud<>(currentCase), new Noeud<>(voisin), calculerCout(currentCase, voisin));
+                    Case neighborCase = new Case(currentCase.getTuile(), newX, newY);
+                    Noeud<Case> currentNoeud = graphe.getNoeud(currentCase);
+                    Noeud<Case> neighborNoeud = graphe.getNoeud(neighborCase);
+                    if (currentNoeud != null && neighborNoeud != null) {
+                        graphe.ajouterArete(currentNoeud, neighborNoeud, calculerCout(currentCase, neighborCase));
+                    }
                 }
             }
         }

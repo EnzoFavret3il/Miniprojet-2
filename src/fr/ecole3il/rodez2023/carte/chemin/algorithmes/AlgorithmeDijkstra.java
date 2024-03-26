@@ -29,10 +29,6 @@ public class AlgorithmeDijkstra<E> implements AlgorithmeChemin<E> {
         while (!queue.isEmpty()) {
             Noeud<E> noeudActuel = queue.poll();
 
-            if (noeudActuel.equals(arrivee)) {
-                break;
-            }
-
             for (Noeud<E> voisin : graphe.getVoisins(noeudActuel)) {
                 double nouveauDistance = distance.get(noeudActuel) + graphe.getCoutArete(noeudActuel, voisin);
                 if (nouveauDistance < distance.get(voisin)) {
@@ -44,11 +40,10 @@ public class AlgorithmeDijkstra<E> implements AlgorithmeChemin<E> {
         }
 
         List<Noeud<E>> chemin = new ArrayList<>();
-        Noeud<E> noeudActuel = arrivee;
-
-        while (noeudActuel != null) {
-            chemin.add(noeudActuel);
-            noeudActuel = precedent.get(noeudActuel);
+        for (Noeud<E> noeud : graphe.getNoeuds()) {
+            if (precedent.get(noeud) != null) {
+                chemin.add(noeud);
+            }
         }
         Collections.reverse(chemin);
 
