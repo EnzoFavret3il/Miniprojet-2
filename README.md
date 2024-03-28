@@ -1,3 +1,4 @@
+# REPONSE AUX QUESTIONS
 ### RELATION ENTRE LES NOEUDS
 
 La structure de données pourrait être utilisée pour stocker les relations entre les nœuds du graphe et les informations associées à ces relations, comme les coûts des arêtes est une collection de type MAP car elle permet d'associer une clef et une valeur. 
