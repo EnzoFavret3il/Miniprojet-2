@@ -1,11 +1,8 @@
 package fr.ecole3il.rodez2023.carte.application;
 
-import fr.ecole3il.rodez2023.carte.AdaptateurAlgorithme;
 import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeAEtoile;
 import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeChemin;
 import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeDijkstra;
-import fr.ecole3il.rodez2023.carte.chemin.elements.Graphe;
-import fr.ecole3il.rodez2023.carte.chemin.elements.Noeud;
 import fr.ecole3il.rodez2023.carte.elements.Carte;
 import fr.ecole3il.rodez2023.carte.elements.Case;
 import fr.ecole3il.rodez2023.carte.elements.Chemin;
@@ -19,16 +16,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Objects;
 
+/**
+ * @author p.roquart
+ * voilà
+ * donc
+ * c'est la classe finale pour le gui quoi
+ * enfin je sais pas
+ * moi j'aime pas le java
+ */
 public class CarteGUI extends JFrame {
     private Carte carte;
     private Case caseDepart;
     private Case caseArrivee;
     private AlgorithmeChemin algorithme;
-
-    private AdaptateurAlgorithme adaptateurAlgorithme;
 
     public CarteGUI(Carte carte) {
         this.carte = carte;
@@ -109,33 +110,26 @@ public class CarteGUI extends JFrame {
             }
         }
 
-        // Draw the path
         if (caseDepart != null && caseArrivee != null) {
-            Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme, carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(), caseArrivee.getY());
-            List<Case> casesChemin = chemin.getCases();
-
-            if (!casesChemin.isEmpty()) {
-                g.setColor(Color.GREEN); // Color of the path
-                for (Case c : casesChemin) {
-                    g.fillRect(c.getX() * 32, c.getY() * 32, 32, 32);
-                }
+            Chemin chemin = algorithme.trouverChemin(carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
+                    caseArrivee.getY());
+            g.setColor(Color.RED);
+            for (Case c : chemin.getCases()) {
+                g.fillRect(c.getX() * 32, c.getY() * 32, 32, 32);
             }
         }
     }
 
-
-
-
     private void trouverChemin() {
         if (caseDepart != null && caseArrivee != null) {
-            Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme, carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(), caseArrivee.getY());
+            Chemin chemin = algorithme.trouverChemin(carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
+                    caseArrivee.getY());
             System.out.println("Chemin le plus court :");
             for (Case c : chemin.getCases()) {
                 System.out.println("[" + c.getX() + ", " + c.getY() + "]");
             }
         }
     }
-
 
     private BufferedImage getTuileImage(Tuile tuile) {
         // Bon, j'ai pas eu le temps de faire les images
@@ -168,7 +162,7 @@ public class CarteGUI extends JFrame {
         // J'ai mis ça en test
         // Donc OKLM en commentaires
         GenerateurCarte gen = new GenerateurCarte();
-        Carte carte = gen.genererCarte(20, 20);//new Carte(tuiles);
+        Carte carte = gen.genererCarte(10, 10);//new Carte(tuiles);
 
         // Créer et afficher l'interface graphique
         SwingUtilities.invokeLater(() -> {
@@ -176,5 +170,4 @@ public class CarteGUI extends JFrame {
             carteGUI.setVisible(true);
         });
     }
-
 }
