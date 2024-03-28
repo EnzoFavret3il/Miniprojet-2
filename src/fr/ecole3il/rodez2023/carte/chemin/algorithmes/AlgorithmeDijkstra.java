@@ -6,53 +6,56 @@ import fr.ecole3il.rodez2023.carte.elements.Case;
 
 import java.util.*;
 
+/**
+ * Cette classe implémente l'algorithme de Dijkstra pour trouver le chemin le plus court
+ * entre deux noeuds dans un graphe pondéré.
+ *
+ * @param <E> le type des éléments contenus dans les noeuds du graphe.
+ */
 public class AlgorithmeDijkstra<E> implements AlgorithmeChemin<E> {
-
+    /**
+     * Trouve le chemin le plus court entre deux noeuds dans un graphe pondéré.
+     *
+     * @param graphe   le graphe dans lequel chercher le chemin.
+     * @param depart   le noeud de départ.
+     * @param arrivee  le noeud d'arrivée.
+     * @return         une liste de noeuds représentant le chemin le plus court de départ à arrivée.
+     */
     @Override
     public List<Noeud<E>> trouverChemin(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
-        Map<Noeud<E>, Noeud<E>> precedent = new HashMap<>();
+        Map<Noeud<E>, Noeud<E>> predecesseur = new HashMap<>();
         Map<Noeud<E>, Double> distance = new HashMap<>();
-        PriorityQueue<Noeud<E>> queue = new PriorityQueue<>(Comparator.comparingDouble(distance::get));
+        PriorityQueue<Noeud<E>> filePrioritaire = new PriorityQueue<>(Comparator.comparingDouble(distance::get));
 
         for (Noeud<E> noeud : graphe.getNoeuds()) {
             distance.put(noeud, Double.POSITIVE_INFINITY);
-            precedent.put(noeud, null);
+            predecesseur.put(noeud, null);
         }
         distance.put(depart, 0.0);
-        queue.add(depart);
-
-        while (!queue.isEmpty()) {
-            Noeud<E> noeudActuel = queue.poll();
-
+        filePrioritaire.add(depart);
+        while (!filePrioritaire.isEmpty()) {
+            Noeud<E> noeudActuel = filePrioritaire.poll();
+            if (noeudActuel.equals(arrivee)) {
+                break;
+            }
             for (Noeud<E> voisin : graphe.getVoisins(noeudActuel)) {
-                // Check if the neighbor is walkable
-                if (!((Case) voisin.getValeur()).getTuile().isWalkable()) {
-                    continue; // Skip this neighbor if it's not walkable
+                double nouvelleDistance = distance.get(noeudActuel) + graphe.getCoutArete(noeudActuel, voisin);
+                    if (nouvelleDistance < distance.get(voisin)) {
+                    distance.put(voisin, nouvelleDistance);
+                    predecesseur.put(voisin, noeudActuel);
+                    filePrioritaire.offer(voisin);
                 }
-
-                double nouveauDistance = distance.get(noeudActuel) + graphe.getCoutArete(noeudActuel, voisin);
-                if (nouveauDistance < distance.get(voisin)) {
-                    distance.put(voisin, nouveauDistance);
-                }
-                // Update the precedent map every time a node is visited
-                precedent.put(voisin, noeudActuel);
-                queue.offer(voisin);
             }
         }
 
-        // Construct the shortest path
         List<Noeud<E>> chemin = new ArrayList<>();
-        Noeud<E> noeud = arrivee;
-        while (noeud != null) {
-            chemin.add(noeud);
-            noeud = precedent.get(noeud);
-        }
-        Collections.reverse(chemin);
+        Noeud<E> noeudActuel = arrivee;
 
-        // Check if the destination was reached
-        if (!chemin.contains(arrivee)) {
-            return Collections.emptyList(); // Indicates that there is no path
+        while (noeudActuel != null) {
+            chemin.add(noeudActuel);
+            noeudActuel = predecesseur.get(noeudActuel);
         }
+Collections.reverse(chemin);
 
         return chemin;
     }

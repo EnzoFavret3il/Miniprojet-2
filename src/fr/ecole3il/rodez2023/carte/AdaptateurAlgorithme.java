@@ -16,71 +16,75 @@ public class AdaptateurAlgorithme {
 
     public static Chemin trouverChemin(AlgorithmeChemin<Case> algorithme, Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
         Graphe<Case> graphe = creerGraphe(carte);
+        Noeud<Case> depart = graphe.getNoeud(xDepart, yDepart);
+        Noeud<Case> arrivee = graphe.getNoeud(xArrivee, yArrivee);
+        List<Noeud<Case>> noeudsChemin = algorithme.trouverChemin(graphe, depart, arrivee);
 
-        Tuile tuileDepart = carte.getTuile(xDepart, yDepart);
-        Case depart = new Case(tuileDepart, xDepart, yDepart);
-
-        Tuile tuileArrivee = carte.getTuile(xArrivee, yArrivee);
-        Case arrivee = new Case(tuileArrivee, xArrivee, yArrivee);
-
-        List<Noeud<Case>> chemin = algorithme.trouverChemin(graphe, new Noeud<>(depart), new Noeud<>(arrivee));
-
-        return afficherChemin(chemin);
+        if (noeudsChemin == null || noeudsChemin.isEmpty()) {
+            return new Chemin(new ArrayList<>());
+        }
+        return new Chemin(afficherChemin(noeudsChemin));
     }
 
-    static Graphe<Case> creerGraphe(Carte carte) {
+    private static Graphe<Case> creerGraphe(Carte carte) {
         Graphe<Case> graphe = new Graphe<>();
         int largeur = carte.getLargeur();
         int hauteur = carte.getHauteur();
-
         for (int x = 0; x < largeur; x++) {
             for (int y = 0; y < hauteur; y++) {
-                Tuile tuileCourante = carte.getTuile(x, y);
-                Case caseCourante = new Case(tuileCourante, x, y);
-                graphe.ajouterNoeud(new Noeud<>(caseCourante));
-                ajouterAretesVoisines(graphe, caseCourante, x, y, largeur, hauteur);
+                Noeud<Case> currentNoeud = new Noeud<>(carte.getCase(x, y));
+                graphe.ajouterNoeud(currentNoeud);
             }
         }
-
+        for (int x = 0; x < largeur; x++) {
+            for (int y = 0; y < hauteur; y++) {
+                Noeud<Case> currentNoeud = graphe.getNoeud(x, y);
+                ajouterAretesVoisines(graphe, currentNoeud, x, y, largeur, hauteur);
+            }
+        }
         return graphe;
     }
 
-    static void ajouterAretesVoisines(Graphe<Case> graphe, Case currentCase, int x, int y, int largeur, int hauteur) {
+    private static void ajouterAretesVoisines(Graphe<Case> graphe, Noeud<Case> currentNoeud, int x, int y, int largeur,
+                                              int hauteur) {
+
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 int newX = x + i;
                 int newY = y + j;
-
                 if (newX >= 0 && newX < largeur && newY >= 0 && newY < hauteur) {
-                    Case voisin = new Case(currentCase.getTuile(), newX, newY);
-                    graphe.ajouterArete(new Noeud<>(currentCase), new Noeud<>(voisin), calculerCout(currentCase, voisin));
+                    Noeud<Case> voisinNoeud = graphe.getNoeud(newX, newY);
+                    if (voisinNoeud != null) {
+                        double cout = calculerCout(currentNoeud.getValeur(), voisinNoeud.getValeur());
+                        graphe.ajouterArete(currentNoeud, voisinNoeud, cout);
+                        currentNoeud.ajouterVoisin(voisinNoeud);
+                    }
                 }
             }
         }
     }
 
-    static double calculerCout(Case from, Case to) {
-        if (from == null || to == null)
-            return Double.POSITIVE_INFINITY;
-
-        return 1.0;
+    private static double calculerCout(Case from, Case to) {
+        if (from == null || to == null) {
+            throw new IllegalArgumentException("Les cases doivent être non nulles");
+        }
+        return from.getTuile().getPenalite() + to.getTuile().getPenalite();
     }
 
-    static Chemin afficherChemin(List<Noeud<Case>> chemin) {
+    private static List<Case> afficherChemin(List<Noeud<Case>> chemin) {
         if (chemin.isEmpty()) {
-            System.out.println("No path found!");
-            return new Chemin(new ArrayList<>());
+            System.out.println("Aucun chemin trouvé !");
+            return new ArrayList<>();
         }
-
-        System.out.print("Path: ");
+        System.out.print("Chemin: ");
         List<Case> cheminCases = new ArrayList<>();
         for (Noeud<Case> noeud : chemin) {
             Case caseNode = noeud.getValeur();
             cheminCases.add(caseNode);
-            System.out.print(" -> " + caseNode.toString());
+            System.out.print("\n -> " + caseNode.toString());
         }
         System.out.println();
 
-        return new Chemin(cheminCases);
+        return cheminCases;
     }
 }

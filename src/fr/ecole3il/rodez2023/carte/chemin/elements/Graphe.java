@@ -1,4 +1,6 @@
 package fr.ecole3il.rodez2023.carte.chemin.elements;
+import fr.ecole3il.rodez2023.carte.elements.Case;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,10 +61,13 @@ public class Graphe<E> {
 	    public List<Noeud<E>> getNoeuds() {
 	        return new ArrayList<>(listeNoeuds);
 	    }
-	public Noeud<E> getNoeud(E valeur) {
+	public Noeud<E> getNoeud(int x, int y) {
 		for (Noeud<E> noeud : listeNoeuds) {
-			if (noeud.getValeur().equals(valeur)) {
-				return noeud;
+			if (noeud.getValeur() instanceof Case) {
+				Case caseValue = (Case) noeud.getValeur();
+				if (caseValue.getX() == x && caseValue.getY() == y) {
+					return noeud;
+				}
 			}
 		}
 		return null;
@@ -75,6 +80,14 @@ public class Graphe<E> {
 	            return new ArrayList<>();
 	        }
 	    }
+
+	public int ajoutPenalite(Noeud<E> noeud) {
+		if (noeud.getValeur() instanceof Case) {
+			Case caseValue = (Case) noeud.getValeur();
+			return caseValue.getTuile().getPenalite();
+		}
+		return 0;
+	}
 }
 
 
