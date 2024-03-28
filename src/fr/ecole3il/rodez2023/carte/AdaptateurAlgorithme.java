@@ -6,14 +6,26 @@ import fr.ecole3il.rodez2023.carte.chemin.elements.Noeud;
 import fr.ecole3il.rodez2023.carte.elements.Carte;
 import fr.ecole3il.rodez2023.carte.elements.Case;
 import fr.ecole3il.rodez2023.carte.elements.Chemin;
-import fr.ecole3il.rodez2023.carte.elements.Tuile;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Cette classe fournit des méthodes pour adapter un algorithme de recherche de chemin à une carte spécifique.
+ */
 public class AdaptateurAlgorithme {
 
+    /**
+     * Trouve un chemin entre deux positions sur une carte en utilisant un algorithme donné.
+     *
+     * @param algorithme l'algorithme à utiliser pour trouver le chemin.
+     * @param carte      la carte sur laquelle chercher le chemin.
+     * @param xDepart    la coordonnée X du départ.
+     * @param yDepart    la coordonnée Y du départ.
+     * @param xArrivee   la coordonnée X de l'arrivée.
+     * @param yArrivee   la coordonnée Y de l'arrivée.
+     * @return           un objet Chemin représentant le chemin trouvé.
+     */
     public static Chemin trouverChemin(AlgorithmeChemin<Case> algorithme, Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee) {
         Graphe<Case> graphe = creerGraphe(carte);
         Noeud<Case> depart = graphe.getNoeud(xDepart, yDepart);
@@ -26,6 +38,12 @@ public class AdaptateurAlgorithme {
         return new Chemin(afficherChemin(noeudsChemin));
     }
 
+    /**
+     * Crée un graphe à partir de la carte spécifiée.
+     *
+     * @param carte la carte à partir de laquelle créer le graphe.
+     * @return le graphe créé.
+     */
     private static Graphe<Case> creerGraphe(Carte carte) {
         Graphe<Case> graphe = new Graphe<>();
         int largeur = carte.getLargeur();
@@ -45,6 +63,16 @@ public class AdaptateurAlgorithme {
         return graphe;
     }
 
+    /**
+     * Ajoute des arêtes voisines au nœud spécifié dans le graphe.
+     *
+     * @param graphe le graphe auquel ajouter des arêtes.
+     * @param currentNoeud le nœud auquel ajouter des arêtes voisines.
+     * @param x la coordonnée X du nœud.
+     * @param y la coordonnée Y du nœud.
+     * @param largeur la largeur de la carte.
+     * @param hauteur la hauteur de la carte.
+     */
     private static void ajouterAretesVoisines(Graphe<Case> graphe, Noeud<Case> currentNoeud, int x, int y, int largeur,
                                               int hauteur) {
 
@@ -64,6 +92,13 @@ public class AdaptateurAlgorithme {
         }
     }
 
+    /**
+     * Calcule le coût entre deux cases données.
+     *
+     * @param from la case de départ.
+     * @param to la case d'arrivée.
+     * @return le coût entre les deux cases.
+     */
     private static double calculerCout(Case from, Case to) {
         if (from == null || to == null) {
             throw new IllegalArgumentException("Les cases doivent être non nulles");
@@ -71,6 +106,12 @@ public class AdaptateurAlgorithme {
         return from.getTuile().getPenalite() + to.getTuile().getPenalite();
     }
 
+    /**
+     * Affiche le chemin trouvé.
+     *
+     * @param chemin la liste des nœuds constituant le chemin.
+     * @return la liste des cases constituant le chemin.
+     */
     private static List<Case> afficherChemin(List<Noeud<Case>> chemin) {
         if (chemin.isEmpty()) {
             System.out.println("Aucun chemin trouvé !");

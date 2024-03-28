@@ -1,6 +1,8 @@
-package fr.ecole3il.rodez2023.carte.chemin.algorithmes;
+package fr.ecole3il.rodez2023.test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeChemin;
 import org.junit.jupiter.api.Test;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Graphe;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Noeud;
