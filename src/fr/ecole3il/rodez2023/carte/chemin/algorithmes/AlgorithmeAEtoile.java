@@ -12,6 +12,7 @@ import java.util.Random;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Graphe;
 import fr.ecole3il.rodez2023.carte.chemin.elements.Noeud;
 import fr.ecole3il.rodez2023.carte.elements.Carte;
+import fr.ecole3il.rodez2023.carte.elements.Case;
 import fr.ecole3il.rodez2023.carte.elements.Chemin;
 
 public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
@@ -67,20 +68,15 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
     * @param arrivee  le nœud d'arrivée.
     * @return une map contenant les coûts estimés pour chaque nœud.
     */
-   private Map<Noeud<E>, Double> initialiserCoutsEstimes(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
-       Map<Noeud<E>, Double> coutsEstimes = new HashMap<>();
-       for (Noeud<E> noeud : graphe.getNoeuds()) {
-           // Utilisation de la distance à vol d'oiseau comme heuristique pour les coûts estimés
-           double distance = calculerDistanceCuiCui(noeud, arrivee);
-           coutsEstimes.put(noeud, distance);
-       }
-       return coutsEstimes;
-   }
-   //Methode calcul distance vol oiseau, random pour l'instant car je ne sais pas comment faire
-	private double calculerDistanceCuiCui(Noeud<E> noeud1, Noeud<E> noeud2) {
-		Random ran= new Random();
-		return ran.nextDouble();
-	}
+    private double heuristique(Noeud<E> n, Noeud<E> cible) {
+        Case caseN = (Case) n.getValeur(); // Récupération de la case associée au nœud
+        Case caseCible = (Case) cible.getValeur(); // Récupération de la case associée à la cible
+
+        // Calcul de la distance euclidienne entre les coordonnées (x, y) des deux cases
+        double dx = Math.abs(caseN.getX() - caseCible.getX());
+        double dy = Math.abs(caseN.getY() - caseCible.getY());
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 	/**Initialisation Priorité
 	*@param coutsEstimes une map contenant les coûts estimés pour chaque nœud
     * @return une file de priorité initialisée avec les coûts estimés des nœuds
