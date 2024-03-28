@@ -28,8 +28,8 @@ import java.awt.image.BufferedImage;
  */
 public class CarteGUI extends JFrame {
     private Carte carte;
-    private Case caseDepart;
-    private Case caseArrivee;
+    public Case caseDepart;
+    public Case caseArrivee;
     private AlgorithmeChemin algorithme;
 
     public CarteGUI(Carte carte) {
@@ -92,7 +92,7 @@ public class CarteGUI extends JFrame {
         });
     }
 
-    private void dessinerCarte(Graphics2D g) {
+    public void dessinerCarte(Graphics2D g) {
         for (int x = 0; x < carte.getLargeur(); x++) {
             for (int y = 0; y < carte.getHauteur(); y++) {
                 Tuile tuile = carte.getTuile(x, y);
@@ -120,7 +120,7 @@ public class CarteGUI extends JFrame {
         }
     }
 
-    private void trouverChemin() {
+    public void trouverChemin() {
         if (caseDepart != null && caseArrivee != null) {
             Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme, carte, caseDepart.getX(), caseDepart.getY(),
                     caseArrivee.getX(), caseArrivee.getY());
@@ -133,7 +133,7 @@ public class CarteGUI extends JFrame {
         }
     }
 
-    private BufferedImage getTuileImage(Tuile tuile) {
+    public BufferedImage getTuileImage(Tuile tuile) {
         // Bon, j'ai pas eu le temps de faire les images
         // mais ça marche
         BufferedImage image = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
