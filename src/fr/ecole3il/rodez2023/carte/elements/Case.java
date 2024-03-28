@@ -55,16 +55,10 @@ public class Case {
     public int hashCode() {
         return Objects.hash(x, y, tuile);
     }
+
     public int getY() {
         return y;
     }
 
-    /**
-     * Renvoie une représentation textuelle de la case sous forme de chaîne de caractères.
-     * @return Une chaîne de caractères représentant la case avec sa tuile et ses coordonnées.
-     */
-    @Override
-    public String toString() {
-        return "Case [tuile=" + tuile + ", x=" + x + ", y=" + y + "]";
-    }
+
 }
